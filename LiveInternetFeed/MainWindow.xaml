@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LiveInternetFeed"
         mc:Ignorable="d"
+        xmlns:controls="clr-namespace:LiveInternetFeed"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+
+    <controls:UserControl1>
         
-    </Grid>
+    </controls:UserControl1>
 </Window>

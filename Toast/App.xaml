@@ -1,8 +1,8 @@
-﻿<Application x:Class="LiveInternetFeed.App"
+﻿<Application x:Class="Toast.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:LiveInternetFeed"
-             StartupUri="LiveInternet.xaml">
+             xmlns:local="clr-namespace:Toast"
+             StartupUri="ShowToast.xaml">
     <Application.Resources>
          
     </Application.Resources>

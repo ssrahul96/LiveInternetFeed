@@ -8,7 +8,7 @@
         xmlns:controls="clr-namespace:LiveInternetFeed"
         Title="MainWindow" Height="450" Width="800">
 
-    <controls:UserControl1>
+    <controls:LiveInternet>
         
-    </controls:UserControl1>
+    </controls:LiveInternet>
 </Window>

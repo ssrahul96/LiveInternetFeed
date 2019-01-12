@@ -25,13 +25,13 @@ namespace LiveInternetFeed
     /// Interaction logic for UserControl1.xaml
     /// </summary>
     /// 
-    public partial class UserControl1 : UserControl,INotifyPropertyChanged
+    public partial class LiveInternet : UserControl,INotifyPropertyChanged
     {
         private double _axisMax;
         private double _axisMin;
         private double _trend;
 
-        public UserControl1()
+        public LiveInternet()
         {
             InitializeComponent();
 
@@ -95,7 +95,7 @@ namespace LiveInternetFeed
 
             while (IsReading)
             {
-                Thread.Sleep(150);
+                Thread.Sleep(2000);
                 var now = DateTime.Now;
 
                 _trend += r.Next(-8, 10);

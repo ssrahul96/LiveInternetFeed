@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.28307.106
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveInternetFeed", "LiveInternetFeed\LiveInternetFeed.csproj", "{05A0D64E-6CB5-49A1-AA10-2CCD461F074E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeanutButter.Toast", "PeanutButter.Toasts\PeanutButter.Toast.csproj", "{B871F316-8338-4B69-90A2-B0E3259F0E58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toast", "Toast\Toast.csproj", "{D17E03CE-8576-49EF-B5BD-F2666AA847B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{05A0D64E-6CB5-49A1-AA10-2CCD461F074E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05A0D64E-6CB5-49A1-AA10-2CCD461F074E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05A0D64E-6CB5-49A1-AA10-2CCD461F074E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B871F316-8338-4B69-90A2-B0E3259F0E58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B871F316-8338-4B69-90A2-B0E3259F0E58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B871F316-8338-4B69-90A2-B0E3259F0E58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B871F316-8338-4B69-90A2-B0E3259F0E58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D17E03CE-8576-49EF-B5BD-F2666AA847B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D17E03CE-8576-49EF-B5BD-F2666AA847B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D17E03CE-8576-49EF-B5BD-F2666AA847B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D17E03CE-8576-49EF-B5BD-F2666AA847B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

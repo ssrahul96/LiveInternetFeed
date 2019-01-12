@@ -9,6 +9,7 @@
     Title="LiveInternet"
     Width="800"
     Height="450"
+    WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
 

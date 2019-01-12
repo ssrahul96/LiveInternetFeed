@@ -1,10 +1,13 @@
 ﻿using LiveCharts;
 using LiveCharts.Configurations;
 using LiveCharts.Wpf;
+using LiveInternetFeed.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,11 +24,7 @@ using System.Windows.Shapes;
 
 namespace LiveInternetFeed
 {
-    /// <summary>
-    /// Interaction logic for UserControl1.xaml
-    /// </summary>
-    /// 
-    public partial class LiveInternet : UserControl,INotifyPropertyChanged
+    public partial class LiveInternet : UserControl, INotifyPropertyChanged
     {
         private double _axisMax;
         private double _axisMin;
@@ -46,10 +45,10 @@ namespace LiveInternetFeed
             ChartValues = new ChartValues<MeasureModel>();
 
             //lets set how to display the X Labels
-            DateTimeFormatter = value => new DateTime((long)value).ToString("mm:ss");
+            DateTimeFormatter = value => new DateTime((long)value).ToString("hh:mm:ss");
 
             //AxisStep forces the distance between each separator in the X axis
-            AxisStep = TimeSpan.FromSeconds(1).Ticks;
+            AxisStep = TimeSpan.FromSeconds(10).Ticks;
             //AxisUnit forces lets the axis know that we are plotting seconds
             //this is not always necessary, but it can prevent wrong labeling
             AxisUnit = TimeSpan.TicksPerSecond;
@@ -95,10 +94,25 @@ namespace LiveInternetFeed
 
             while (IsReading)
             {
-                Thread.Sleep(2000);
+                Thread.Sleep(MainModel.time);
                 var now = DateTime.Now;
 
-                _trend += r.Next(-8, 10);
+                try
+                {
+                    using (WebClient wc = new MyWebClient())
+                    {
+                        wc.DownloadString(MainModel.url);
+
+                        _trend = (DateTime.Now - now).TotalMilliseconds;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    _trend = 0;
+                    Process.Start(String.Format("\"{0}\"",MainModel.toastExe),String.Format("\"{0}\" \"{1}\"",MainModel.toastMessage,ex.Message));
+                }
+
+
 
                 ChartValues.Add(new MeasureModel
                 {
@@ -109,14 +123,14 @@ namespace LiveInternetFeed
                 SetAxisLimits(now);
 
                 //lets only use the last 150 values
-                if (ChartValues.Count > 150) ChartValues.RemoveAt(0);
+                if (ChartValues.Count > 100) ChartValues.RemoveAt(0);
             }
         }
 
         private void SetAxisLimits(DateTime now)
         {
             AxisMax = now.Ticks + TimeSpan.FromSeconds(1).Ticks; // lets force the axis to be 1 second ahead
-            AxisMin = now.Ticks - TimeSpan.FromSeconds(8).Ticks; // and 8 seconds behind
+            AxisMin = now.Ticks - TimeSpan.FromSeconds(100).Ticks; // and 8 seconds behind
         }
 
         private void InjectStopOnClick(object sender, RoutedEventArgs e)
@@ -136,5 +150,20 @@ namespace LiveInternetFeed
         }
 
         #endregion
+
+        private class MyWebClient : WebClient
+        {
+            protected override WebRequest GetWebRequest(Uri uri)
+            {
+                WebRequest w = base.GetWebRequest(uri);
+                w.Timeout = MainModel.time * 1000;
+                return w;
+            }
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
+        }
     }
 }

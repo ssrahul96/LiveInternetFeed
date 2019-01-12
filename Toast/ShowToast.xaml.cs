@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,10 +22,21 @@ namespace Toast
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const String appName = "Toast";
+        private static Mutex mutex = null;
         public MainWindow()
         {
             InitializeComponent();
 
+
+            bool createdNew;
+
+            Mutex = new Mutex(true, appName, out createdNew);
+
+            if (!createdNew)
+            {
+                Environment.Exit(0);
+            }
 
             String[] cla = Environment.GetCommandLineArgs();
 
@@ -36,5 +48,7 @@ namespace Toast
             Toaster toaster = new Toaster();
             toaster.Show(cla[1], new Exception(cla[2]));
         }
+
+        public static Mutex Mutex { get => mutex; set => mutex = value; }
     }
 }

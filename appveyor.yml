@@ -20,7 +20,7 @@ build:
   project: LiveInternetFeed.sln
   publish_nuget_symbols: true
   include_nuget_references: true
-  verbosity: detailed
+  verbosity: normal
 artifacts:
   - path: Output32
 

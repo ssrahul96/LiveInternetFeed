@@ -68,6 +68,10 @@ namespace LiveInternetFeed
 			_url = Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["checkurl"]);
 
 			int.TryParse(System.Configuration.ConfigurationManager.AppSettings["timeout"], out _timeout);
+
+			if (Environment.GetCommandLineArgs().Length == 2 && Environment.GetCommandLineArgs()[1].Equals("startup"))
+				InjectStopOnClick(new object(), new RoutedEventArgs());
+
 		}
 
 		public ChartValues<MeasureModel> ChartValues { get; set; }

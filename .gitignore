@@ -261,3 +261,5 @@ __pycache__/
 *.pyc
 /Output
 /LiveInternetFeed.zip
+/Output64
+/Output32

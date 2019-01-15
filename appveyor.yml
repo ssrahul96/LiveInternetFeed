@@ -16,11 +16,11 @@ configuration:
   - Release
 
 build:
-  publish_nuget: true
+  publish_nuget: false
   project: LiveInternetFeed.sln
   publish_nuget_symbols: true
   include_nuget_references: true
-  verbosity: minimal
+  verbosity: detailed
 artifacts:
   - path: Output32
 

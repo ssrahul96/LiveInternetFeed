@@ -9,7 +9,7 @@ before_build:
   - nuget restore
 build:
   publish_nuget: true
-  project: LiveInternetFeed.sln
+  project: HNA-UI.sln
   publish_nuget_symbols: true
   include_nuget_references: true
-verbosity: minimal
+  verbosity: minimal

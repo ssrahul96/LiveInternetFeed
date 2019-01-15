@@ -21,8 +21,10 @@ build:
   publish_nuget_symbols: true
   include_nuget_references: true
   verbosity: minimal
-artifacts:
-  - path: Output32
 
-  - path: Output64
+after_build:
+  - 7z a LiveInternetFeed.zip .\Output32\*
+  - 7z a LiveInternetFeed.zip .\Output64\*
+artifacts:
+  - path: LiveInternetFeed.zip
 

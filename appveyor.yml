@@ -12,10 +12,9 @@ before_build:
 
 platform:
   - x64
-  - Any CPU
+  - x86
 
 configuration:
-  - Debug
   - Release
 
 build:

@@ -1,4 +1,6 @@
 version: 1.0.{build}
+image:
+  - Visual Studio 2017
 cache:
   - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
   - projectA\libs
@@ -7,6 +9,15 @@ cache:
   - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
 before_build:
   - nuget restore
+
+platform:
+  - x64
+  - Any CPU
+
+configuration:
+  - Debug
+  - Release
+
 build:
   publish_nuget: true
   project: LiveInternetFeed.sln

@@ -65,7 +65,7 @@ namespace LiveInternetFeed
 
 			XmlConfigurator.Configure(new FileInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "LiveInternetFeed.exe.config")));
 
-			_url = Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["samurl"]);
+			_url = Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["checkurl"]);
 
 			int.TryParse(System.Configuration.ConfigurationManager.AppSettings["timeout"], out _timeout);
 		}
@@ -182,7 +182,7 @@ namespace LiveInternetFeed
 				{
 					_url = uriResult?.AbsoluteUri;
 					website = uriResult?.Host;
-					ApplySettings("samurl", _url);
+					ApplySettings("checkurl", _url);
 					ApplySettings("timeout", _timeout.ToString());
 				}
 				else

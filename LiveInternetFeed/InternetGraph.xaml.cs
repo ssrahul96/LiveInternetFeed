@@ -2,10 +2,14 @@
 using LiveCharts.Configurations;
 using LiveInternetFeed.Model;
 using log4net;
+using log4net.Config;
 using System;
 using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,6 +23,14 @@ namespace LiveInternetFeed
 		private double _axisMax;
 		private double _axisMin;
 		private double _trend;
+
+		private string _url;
+		private int _timeout;
+
+		private const String appName = "LiveInternet";
+		private Uri uriResult;
+
+		private string website = String.Empty;
 
 		public InternetGraph()
 		{
@@ -50,6 +62,12 @@ namespace LiveInternetFeed
 			IsReading = false;
 
 			DataContext = this;
+
+			XmlConfigurator.Configure(new FileInfo(System.IO.Path.Combine(Environment.CurrentDirectory, "LiveInternetFeed.exe.config")));
+
+			_url = Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["samurl"]);
+
+			int.TryParse(System.Configuration.ConfigurationManager.AppSettings["timeout"], out _timeout);
 		}
 
 		public ChartValues<MeasureModel> ChartValues { get; set; }
@@ -77,6 +95,40 @@ namespace LiveInternetFeed
 			}
 		}
 
+		public string btnStartStop
+		{
+			get
+			{
+				return IsReading ? "Stop" : "Start";
+			}
+		}
+
+		public string URL
+		{
+			get
+			{
+				return _url;
+			}
+			set
+			{
+				_url = value;
+			}
+		}
+
+		public int Timeout
+		{
+			get
+			{
+				return _timeout;
+			}
+			set
+			{
+				_timeout = value;
+			}
+		}
+
+		public bool EnableTextBox { get { return !IsReading; } }
+
 		public bool IsReading { get; set; }
 
 		private void Read()
@@ -85,14 +137,14 @@ namespace LiveInternetFeed
 
 			while (IsReading)
 			{
-				Thread.Sleep(MainModel.time);
+				Thread.Sleep(_timeout * 1000);
 				var now = DateTime.Now;
 
 				try
 				{
 					using (WebClient wc = new MyWebClient())
 					{
-						wc.DownloadString(MainModel.url);
+						wc.DownloadString(_url);
 
 						_trend = (DateTime.Now - now).TotalMilliseconds;
 					}
@@ -101,7 +153,7 @@ namespace LiveInternetFeed
 				{
 					_trend = 0;
 					log.Error(ex.Message);
-					Process.Start(String.Format("\"{0}\"", MainModel.toastExe), String.Format("\"{0}\" \"{1}{2}{3}\"", MainModel.toastMessage, DateTime.Now, Environment.NewLine, ex.Message));
+					Process.Start(String.Format("\"{0}\"", MainModel.toastExe), String.Format("\"{0} : {1}\" \"{2}{3}{4}\"", MainModel.toastMessage, website, DateTime.Now, Environment.NewLine, ex.Message));
 				}
 
 				ChartValues.Add(new MeasureModel
@@ -112,7 +164,6 @@ namespace LiveInternetFeed
 
 				SetAxisLimits(now);
 
-				//lets only use the last 150 values
 				if (ChartValues.Count > 100) ChartValues.RemoveAt(0);
 			}
 		}
@@ -125,8 +176,31 @@ namespace LiveInternetFeed
 
 		private void InjectStopOnClick(object sender, RoutedEventArgs e)
 		{
+			if (!IsReading)
+			{
+				if (ValidHttpURL(_url, out uriResult))
+				{
+					_url = uriResult?.AbsoluteUri;
+					website = uriResult?.Host;
+					ApplySettings("samurl", _url);
+					ApplySettings("timeout", _timeout.ToString());
+				}
+				else
+				{
+					MessageBox.Show("URL is not Proper", appName);
+					Environment.Exit(0);
+					return;
+				}
+
+				//log.Info(String.Format("URL : {0}", _url));
+				//log.Info(String.Format("TIMEOUT : {0}", _timeout));
+			}
+
 			IsReading = !IsReading;
 			if (IsReading) Task.Factory.StartNew(Read);
+			OnPropertyChanged("btnStartStop");
+			OnPropertyChanged("EnableTextBox");
+			OnPropertyChanged("URL");
 		}
 
 		#region INotifyPropertyChanged implementation
@@ -146,7 +220,7 @@ namespace LiveInternetFeed
 			protected override WebRequest GetWebRequest(Uri uri)
 			{
 				WebRequest w = base.GetWebRequest(uri);
-				w.Timeout = MainModel.time * 1000;
+				w.Timeout = 1000;
 				return w;
 			}
 		}
@@ -154,6 +228,40 @@ namespace LiveInternetFeed
 		private void Exit_Click(object sender, RoutedEventArgs e)
 		{
 			Environment.Exit(0);
+		}
+
+		public bool ValidHttpURL(string s, out Uri resultURI)
+		{
+			if (!Regex.IsMatch(s, @"^https?:\/\/", RegexOptions.IgnoreCase))
+				s = "http://" + s;
+
+			if (Uri.TryCreate(s, UriKind.Absolute, out resultURI))
+				return (resultURI.Scheme == Uri.UriSchemeHttp ||
+						resultURI.Scheme == Uri.UriSchemeHttps);
+
+			return false;
+		}
+
+		public void ApplySettings(string key, string value)
+		{
+			var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+			var settings = configFile.AppSettings.Settings;
+			if (settings[key] == null)
+			{
+				settings.Add(key, value);
+			}
+			else
+			{
+				settings[key].Value = value;
+			}
+			configFile.Save(ConfigurationSaveMode.Modified);
+			ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
+		}
+
+		private void TextBox_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+		{
+			var textBox = sender as TextBox;
+			e.Handled = Regex.IsMatch(e.Text, "[^0-9]+");
 		}
 	}
 }

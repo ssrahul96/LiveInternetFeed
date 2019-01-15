@@ -13,27 +13,28 @@
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="9*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="8*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="0">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Click="InjectStopOnClick">
-                Start/Stop
-            </Button>
-            <Button Grid.Column="1" Click="Exit_Click">
-                Exit
-            </Button>
+
+            <Label Grid.Column="0" Content="URL :" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <TextBox  Grid.Column="1" Width="400" Height="20"  VerticalAlignment="Center" Text="{Binding URL}" IsEnabled="{Binding EnableTextBox}"/>
+            <Label Grid.Column="2" Content="Timeout (s):" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <TextBox  Grid.Column="3" Width="100" Height="20"  VerticalAlignment="Center" Text="{Binding Timeout}" IsEnabled="{Binding EnableTextBox}"  PreviewTextInput="TextBox_PreviewTextInput"/>
         </Grid>
 
-        <!--  Here we disable tooltips and hovering to get a better performance  -->
         <lvc:CartesianChart
-            Grid.Row="0"
+            Grid.Row="1"
             AnimationsSpeed="0:0:0.5"
             DataTooltip="{x:Null}"
             Hoverable="False">
@@ -61,5 +62,18 @@
                 </lvc:Axis>
             </lvc:CartesianChart.AxisX>
         </lvc:CartesianChart>
+
+        <Grid Grid.Row="2">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Click="InjectStopOnClick" Content="{Binding btnStartStop}" />
+
+            <Button Grid.Column="1" Click="Exit_Click">
+                Exit
+            </Button>
+        </Grid>
     </Grid>
 </UserControl>

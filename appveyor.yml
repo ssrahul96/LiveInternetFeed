@@ -1,28 +1,30 @@
-version: 1.0.{build}
-image:
-  - Visual Studio 2017
-cache:
-  - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified                  # local npm modules
-  - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
-  - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
-before_build:
-  - nuget restore
-
-platform:
+artifacts: 
+  - 
+    path: Output32
+  - 
+    path: Output64
+before_build: 
+  - "nuget restore"
+build: 
+  include_nuget_references: true
+  project: LiveInternetFeed.sln
+  publish_nuget: false
+  publish_nuget_symbols: true
+  verbosity: normal
+build_script: 
+  - "choco install \"sonarscanner-msbuild-net46\" -y"
+  - "SonarScanner.MSBuild.exe begin /k:\"LiveInternetFeed\" /d:\"sonar.host.url=https://sonarcloud.io\" /o:\"ssrahul96_LiveInternetFeed\" /d:\"sonar.login=87190a984063adb76349f6cfda84bee4f950941f\""
+  - "msbuild /verbosity:quiet \"LiveInternetFeed.sln\""
+  - "SonarScanner.MSBuild.exe end /d:\"sonar.login=87190a984063adb76349f6cfda84bee4f950941f\""
+cache: 
+  - "packages -> **\\packages.config"
+  - "%LocalAppData%\\NuGet\\Cache"
+  - "%LocalAppData%\\NuGet\\v3-cache"
+configuration: 
+  - Release
+image: 
+  - "Visual Studio 2017"
+platform: 
   - x64
   - x86
-
-configuration:
-  - Release
-
-build:
-  publish_nuget: false
-  project: LiveInternetFeed.sln
-  publish_nuget_symbols: true
-  include_nuget_references: true
-  verbosity: normal
-artifacts:
-  - path: Output32
-
-  - path: Output64
-
+version: "1.0.{build}"

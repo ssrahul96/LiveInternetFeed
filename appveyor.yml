@@ -1,3 +1,4 @@
+--- 
 artifacts: 
   - 
     path: Output32
@@ -13,7 +14,7 @@ build:
   verbosity: normal
 build_script: 
   - "choco install \"sonarscanner-msbuild-net46\" -y"
-  - "SonarScanner.MSBuild.exe begin /k:\"LiveInternetFeed\" /d:\"sonar.host.url=https://sonarcloud.io\" /o:\"ssrahul96_LiveInternetFeed\" /d:\"sonar.login=87190a984063adb76349f6cfda84bee4f950941f\""
+  - "SonarScanner.MSBuild.exe begin /k:\"LiveInternetFeed\" /d:\"sonar.host.url=https://sonarcloud.io\" /o:\"ssrahul96-github\" /d:\"sonar.login=87190a984063adb76349f6cfda84bee4f950941f\""
   - "msbuild /verbosity:quiet \"LiveInternetFeed.sln\""
   - "SonarScanner.MSBuild.exe end /d:\"sonar.login=87190a984063adb76349f6cfda84bee4f950941f\""
 cache: 
